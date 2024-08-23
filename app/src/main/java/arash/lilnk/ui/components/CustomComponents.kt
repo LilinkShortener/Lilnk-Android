@@ -1,7 +1,6 @@
 package arash.lilnk.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -25,13 +23,19 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import arash.lilnk.R
 import arash.lilnk.ui.theme.LilnkTheme
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.*
+import kotlinx.coroutines.delay
+import kotlin.math.log10
+import kotlin.math.max
 
 @Composable
 fun DashedLine(
@@ -103,6 +107,33 @@ fun IconText(painter: Painter, text: String, modifier: Modifier = Modifier) {
             modifier = Modifier.size(16.dp)
         )
     }
+}
+
+
+@Composable
+fun AnimatedCounter(
+    targetValue: Int,
+    baseDuration: Int = 300, // مدت زمان پایه
+    maxDuration: Int = 2000, // حداکثر مدت زمان
+) {
+    val difference = max(1, targetValue)
+    val duration = (log10(difference.toFloat()) * baseDuration).toInt().coerceAtMost(maxDuration)
+
+    val animatedValue by animateIntAsState(
+        targetValue = targetValue,
+        animationSpec = tween(durationMillis = duration),
+        label = "AnimatedCounter"
+    )
+
+    AutoResizeText(
+        text = animatedValue.toString(),
+        style = MaterialTheme.typography.displayMedium,
+        maxLines = 1,
+        fontSizeRange = FontSizeRange(
+            min = MaterialTheme.typography.headlineSmall.fontSize,
+            max = MaterialTheme.typography.displayMedium.fontSize,
+        )
+    )
 }
 
 @Preview(showBackground = true)

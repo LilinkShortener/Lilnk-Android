@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,13 +42,17 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import arash.lilnk.utilities.Statics.DOMAIN
 import arash.lilnk.utilities.copyToClipboard
 import arash.lilnk.utilities.shareText
 import io.github.alexzhirkevich.qrose.rememberQrCodePainter
 
+enum class ResultType { Link, Note }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResultBottomSheet(
+    resultType: ResultType,
     showResult: Boolean,
     shortenLink: String,
     hasAds: Boolean,
@@ -55,11 +60,9 @@ fun ResultBottomSheet(
 ) {
     val context = LocalContext.current
     val btmState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val shortUrl by rememberUpdatedState(newValue = "lilnk.ir/$shortenLink")
-    val currentHasAds by rememberUpdatedState(newValue = hasAds)
+    val shortUrl by rememberUpdatedState(newValue = if (resultType == ResultType.Link) "$DOMAIN//$shortenLink" else "$DOMAIN//notes/$shortenLink")
 
     if (showResult) {
-
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             sheetState = btmState,
@@ -70,7 +73,7 @@ fun ResultBottomSheet(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                 ) {
                     Text(
-                        text = "لینک کوتاه شده:",
+                        text = if (resultType == ResultType.Link) "لینک کوتاه شده:" else "لینک نوت:",
                         fontSize = 16.sp,
                         modifier = Modifier.padding(4.dp)
                     )
@@ -83,6 +86,8 @@ fun ResultBottomSheet(
                         shape = CardDefaults.shape,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .selectable(false) {}
+                            .clickable(false) { }
                             .focusable(false)
                     )
 

@@ -1,6 +1,7 @@
 package arash.lilnk.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,19 +30,21 @@ import androidx.compose.ui.unit.sp
 import arash.lilnk.R
 import arash.lilnk.model.Links
 import arash.lilnk.ui.theme.LilnkTheme
+import arash.lilnk.utilities.Statics.DOMAIN
 
 @Composable
-fun LinksItem(item: Links) {
+fun LinksItem(item: Links, onItemClick: () -> Unit) {
     Column {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.End,
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable { onItemClick() }
                 .padding(12.dp)
         ) {
             Text(
-                text = "lilnk.ir/${item.shortUrl}",
+                text = "$DOMAIN/${item.shortUrl}",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(textDirection = TextDirection.Ltr),
@@ -61,7 +64,7 @@ fun LinksItem(item: Links) {
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "12 بهمن 1402", fontSize = 14.sp, modifier = Modifier.weight(1f))
+                Text(text = item.createdAt, fontSize = 14.sp, modifier = Modifier.weight(1f))
                 IconText(
                     painter = painterResource(id = R.drawable.ic_earnings),
                     text = item.earnings.toString(),
@@ -87,12 +90,14 @@ fun LinksItemPreview() {
     LilnkTheme {
         LinksItem(
             Links(
-                shortUrl = "lilnk.ir/abcd1234",
+                shortUrl = "$DOMAIN/abcd1234",
                 originalUrl = "https://www.bing.com/search?q=json+to+android+data+class&cvid=f92e83276d94467d9fc563bf1d5f3903&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDYyMjlqMGo0qAIIsAIB&FORM=ANAB01&PC=U531",
                 createdAt = "2024-08-01 12:00:00",
                 accessCount = 100,
                 earnings = 50,
             )
-        )
+        ) {
+
+        }
     }
 }

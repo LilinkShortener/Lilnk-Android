@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Button
@@ -56,6 +58,7 @@ import arash.lilnk.api.shortenLink
 import arash.lilnk.ui.components.DashedLine
 import arash.lilnk.ui.components.LabeledSwitch
 import arash.lilnk.ui.dialogs.ResultBottomSheet
+import arash.lilnk.ui.dialogs.ResultType
 import arash.lilnk.ui.theme.LilnkTheme
 import arash.lilnk.utilities.Lilnk
 import arash.lilnk.utilities.Statics.REQUEST_TAG
@@ -70,11 +73,11 @@ fun HomeScreen(
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
 ) {
+    val scrollState = rememberScrollState()
 
     var longUrl by rememberSaveable { mutableStateOf("") }
     var customUrl by rememberSaveable { mutableStateOf("") }
     var showAds by remember { mutableStateOf(true) }
-
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var showResult by rememberSaveable { mutableStateOf(false) }
     var shortUrl by rememberSaveable { mutableStateOf("") }
@@ -88,6 +91,7 @@ fun HomeScreen(
     )
 
     ResultBottomSheet(
+        resultType = ResultType.Link,
         shortenLink = shortUrl,
         hasAds = showAds,
         showResult = showResult,
@@ -99,6 +103,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(horizontal = 16.dp)
     ) {
         Text(
@@ -127,16 +132,6 @@ fun HomeScreen(
                     )
                 }
             }
-//            FloatingActionButton(
-//                onClick = { /*TODO*/ },
-//                elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 0.dp)
-//            ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.ic_paste),
-//                    contentDescription = "Paste URL",
-//                    modifier = Modifier.size(22.dp)
-//                )
-//            }
             Spacer(modifier = Modifier.width(8.dp))
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 OutlinedTextField( /* original_link */

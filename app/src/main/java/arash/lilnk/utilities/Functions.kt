@@ -10,10 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import saman.zamani.persiandate.PersianDate
+import saman.zamani.persiandate.PersianDateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.regex.Pattern
+
 
 fun showSnackbar(
     coroutineScope: CoroutineScope,
@@ -54,7 +56,8 @@ fun isValidCustomUrl(customUrl: String): Boolean {
 
 
 fun copyToClipboard(context: Context, content: String) {
-    val clipboard = ContextCompat.getSystemService(context, android.content.ClipboardManager::class.java)
+    val clipboard =
+        ContextCompat.getSystemService(context, android.content.ClipboardManager::class.java)
     val clip = android.content.ClipData.newPlainText("Short URL", content)
     clipboard?.setPrimaryClip(clip)
 
@@ -70,13 +73,19 @@ fun shareText(context: Context, text: String) {
     startActivity(context, Intent.createChooser(intent, "Share via"), null)
 }
 
-//
-//fun convertGregorianToJalali(dateString: String): String {
-//    // فرمت تاریخ میلادی ورودی
-//    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-//    val date: Date = simpleDateFormat.parse(dateString) ?: return ""
-//
-//    // تبدیل تاریخ به شمسی
-//    val jalaliDate = JalaliCalendar(date)
-//    return "${jalaliDate.year}/${jalaliDate.month}/${jalaliDate.day}"
-//}
+
+fun String?.convertToPersian(ifNull: String = ""): String {
+    if (this.isNullOrEmpty()) return ifNull
+    try {
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        val date = simpleDateFormat.parse(this)
+
+        val persianDate = PersianDate(date)
+        val persianDateFormat = PersianDateFormat("l، j F ماه Y")
+
+        return persianDateFormat.format(persianDate)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return this
+    }
+}

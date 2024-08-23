@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import arash.lilnk.ui.screens.AboutScreen
 import arash.lilnk.ui.screens.HomeScreen
+import arash.lilnk.ui.screens.NotesScreen
 import arash.lilnk.ui.screens.StartScreen
 import arash.lilnk.ui.screens.StatsScreen
 import arash.lilnk.ui.screens.WithdrawalsStatsScreen
@@ -36,19 +38,28 @@ fun SetupNavGraph(
                 snackbarHostState = snackbarHostState
             )
         }
-        composable(route = Screens.Stats.route){
+        composable(route = Screens.Notes.route) {
+            NotesScreen(
+                coroutineScope = coroutineScope,
+                snackbarHostState = snackbarHostState
+            )
+        }
+        composable(route = Screens.Stats.route) {
             StatsScreen(
                 navController = navHostController,
                 coroutineScope = coroutineScope,
                 snackbarHostState = snackbarHostState
             )
         }
-        composable(route = Screens.Withdrawals.route){
+        composable(route = Screens.Withdrawals.route) {
             WithdrawalsStatsScreen(
                 navController = navHostController,
                 coroutineScope = coroutineScope,
                 snackbarHostState = snackbarHostState
             )
+        }
+        composable(route = Screens.About.route) {
+            AboutScreen()
         }
     }
 }

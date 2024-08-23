@@ -65,6 +65,7 @@ fun StartScreen(
     coroutineScope: CoroutineScope,
 ) {
     val scrollState = rememberScrollState()
+
     var email by rememberSaveable { mutableStateOf("arash33a@gmail.com") }
     var password by rememberSaveable { mutableStateOf("arash33a") }
     var isLoading by rememberSaveable { mutableStateOf(false) }
@@ -145,6 +146,11 @@ fun StartScreen(
                 loginUser(email, password) { success, result ->
                     isLoading = false
                     if (success) {
+                        showSnackbar(
+                            coroutineScope = coroutineScope,
+                            snackbarHostState = snackbarHostState,
+                            message = "خوش آمدید"
+                        )
                         Preferences[Statics.USER_ID] = result
                         Preferences[Statics.USER_EMAIL] = email
                         navController.navigate(Screens.Home.route)

@@ -7,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
@@ -214,7 +217,7 @@ fun WithdrawalsStatsScreen(
                                                     coroutineScope = coroutineScope,
                                                     snackbarHostState = snackbarHostState,
                                                     message = when (code) {
-                                                        0->"اتصال به سرور امکان پذیر نبود."
+                                                        0 -> "اتصال به سرور امکان پذیر نبود."
                                                         6001 -> "موجودی کاربر کافی نیست."
                                                         6004 -> "مشکلی در پردازش درخواست واریز وجود دارد."
                                                         6005 -> "کاربر پیدا نشد."
@@ -223,7 +226,6 @@ fun WithdrawalsStatsScreen(
                                                 )
                                             }
                                         }
-
                                     }
                                 )
                             }
@@ -245,9 +247,9 @@ fun UserInfo(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
     ) {
-        // کارت اطلاعات کاربر
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -276,7 +278,6 @@ fun UserInfo(
             }
         }
 
-        // کارت اطلاعات لینک‌ها
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -318,7 +319,6 @@ fun UserInfo(
             }
         }
 
-        // کارت اطلاعات مالی
         Card(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -335,7 +335,7 @@ fun UserInfo(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "از زمان شروع همکاریمون ${wStats.adsEarnings} درآمد کسب کردید! ",
+                    text = "از زمان شروع همکاریمون ${wStats.adsEarnings} تومانءء درآمد کسب کردید! ",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -375,7 +375,10 @@ fun CashoutAndHistory(
     var name by rememberSaveable { mutableStateOf("") }
     var surname by rememberSaveable { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+    ) {
         Text(
             text = "ایجاد درخواست برداشت",
             fontWeight = FontWeight.Medium,

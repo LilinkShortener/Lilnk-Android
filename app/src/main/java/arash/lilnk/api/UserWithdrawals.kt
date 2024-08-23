@@ -10,6 +10,7 @@ import arash.lilnk.model.Withdrawal
 import arash.lilnk.model.WithdrawalsStats
 import arash.lilnk.utilities.Lilnk
 import arash.lilnk.utilities.Statics
+import arash.lilnk.utilities.convertToPersian
 import com.android.volley.Request
 import org.json.JSONObject
 
@@ -82,7 +83,7 @@ fun getWithdrawalsStats(onResult: (Boolean, String?, WithdrawalsStats?) -> Unit)
                             amount = withdrawalJson.optInt("amount"),
                             name = withdrawalJson.optString("name"),
                             surname = withdrawalJson.optString("surname"),
-                            requestTime = withdrawalJson.optString("request_time"),
+                            requestTime = withdrawalJson.optString("request_time").convertToPersian(),
                             status = withdrawalJson.optInt("status")
                         )
                         withdrawalsList.add(withdrawal)

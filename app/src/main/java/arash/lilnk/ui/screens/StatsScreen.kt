@@ -27,9 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import arash.lilnk.api.getUserLinkStats
+import arash.lilnk.api.getUserLinks
 import arash.lilnk.model.Links
 import arash.lilnk.ui.components.LinksItem
+import arash.lilnk.ui.dialogs.ResultBottomSheet
+import arash.lilnk.ui.dialogs.ResultType
 import arash.lilnk.ui.theme.LilnkTheme
 import arash.lilnk.utilities.Lilnk
 import arash.lilnk.utilities.Preferences
@@ -47,11 +49,16 @@ fun StatsScreen(
     // Define state variables
     var isLoading by rememberSaveable { mutableStateOf(true) }
     var isEmpty by rememberSaveable { mutableStateOf(true) }
-    var linkDataList by rememberSaveable { mutableStateOf<List<Links>?>(null) }
+    var linkDataList by remember { mutableStateOf<List<Links>?>(null) }
     var earnings by rememberSaveable { mutableIntStateOf(0) }
+
+    var hasAds by remember { mutableStateOf(true) }
+    var showResult by rememberSaveable { mutableStateOf(false) }
+    var shortUrl by rememberSaveable { mutableStateOf("") }
+
     // Launch the data fetching operation
     LaunchedEffect(Unit) {
-        getUserLinkStats { success, errorCode, links, totalEarnings ->
+        getUserLinks { success, errorCode, links, totalEarnings ->
             isLoading = false
             if (success && !links.isNullOrEmpty()) {
                 linkDataList = links
@@ -119,13 +126,24 @@ fun StatsScreen(
                 items(
                     count = list.size,
                 ) { index ->
-                    LinksItem(item = list[index])
+                    LinksItem(item = list[index]) {
+                        shortUrl = list[index].shortUrl
+                        hasAds = list[index].earnings > 0
+                        showResult = true
+                    }
                 }
             } ?: run {
                 isEmpty = true
             }
         }
     }
+    ResultBottomSheet(
+        resultType = ResultType.Link,
+        shortenLink = shortUrl,
+        hasAds = hasAds,
+        showResult = showResult,
+        onDismiss = { showResult = false },
+    )
 }
 
 //@Preview(showBackground = true, showSystemUi = true)

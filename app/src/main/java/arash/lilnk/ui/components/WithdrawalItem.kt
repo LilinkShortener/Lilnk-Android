@@ -51,7 +51,7 @@ fun WithdrawalItem(item: Withdrawal) {
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = "مقدار ${item.amount.toInt()} تومان به نام ${item.name} ${item.surname}",
+                text = "مقدار ${item.amount} تومان به نام ${item.name} ${item.surname}",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall,

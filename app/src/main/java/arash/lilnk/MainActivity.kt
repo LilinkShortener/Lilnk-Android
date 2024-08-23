@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Person
@@ -70,6 +71,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import arash.lilnk.ui.dialogs.NotesHistoryBottomSheet
 import arash.lilnk.ui.screens.navigation.Screens
 import arash.lilnk.ui.theme.LilnkTheme
 import kotlinx.coroutines.CoroutineScope
@@ -81,8 +83,6 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var navController: NavHostController
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,8 +92,7 @@ class MainActivity : ComponentActivity() {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val coroutineScope: CoroutineScope = rememberCoroutineScope()
                 val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
-                navController = rememberNavController()
+                val navController: NavHostController = rememberNavController()
 
                 val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute =
@@ -104,7 +103,9 @@ class MainActivity : ComponentActivity() {
                     AppDrawer(
                         route = currentRoute,
                         navigateToHome = { navController.navigate(Screens.Home.route) },
+                        navigateToNotes = { navController.navigate(Screens.Notes.route) },
                         navigateToStats = { navController.navigate(Screens.Stats.route) },
+                        navigateToAbout = { navController.navigate(Screens.About.route) },
                         closeDrawer = {
                             coroutineScope.launch { drawerState.close() }
                         },
@@ -143,14 +144,19 @@ class MainActivity : ComponentActivity() {
                                             )
                                         }
                                 },
-//                            actions = {
-//                                IconButton(onClick = { /* do something */ }) {
-//                                    Icon(
-//                                        imageVector = Icons.Filled.Menu,
-//                                        contentDescription = "Localized description"
-//                                    )
-//                                }
-//                            },
+                                actions = {
+//                                    when (currentRoute) {
+//                                        Screens.Notes.route ->
+//                                            IconButton(onClick = {
+//                                                showNoteHistory = true
+//                                            }) {
+//                                                Icon(
+//                                                    painter = painterResource(id = R.drawable.ic_history),
+//                                                    contentDescription = "History"
+//                                                )
+//                                            }
+//                                    }
+                                },
                                 scrollBehavior = scrollBehavior,
                             )
                         },
@@ -178,121 +184,130 @@ class MainActivity : ComponentActivity() {
         route: String,
         modifier: Modifier = Modifier,
         navigateToHome: () -> Unit,
+        navigateToNotes: () -> Unit,
         navigateToStats: () -> Unit,
+        navigateToAbout: () -> Unit,
         navigateToWithdraw: () -> Unit,
         logout: () -> Unit,
         closeDrawer: () -> Unit,
     ) {
         ModalDrawerSheet(modifier = Modifier) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+
             ) {
-                Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
+                Image(
+                    painter = painterResource(id = R.drawable.drawer_banner),
+                    contentDescription = null,
+                    modifier = Modifier.clip(CardDefaults.shape)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                NavigationDrawerItem(
+                    label = { Text(text = "خانه") },
+                    selected = route == Screens.Home.route,
+                    onClick = {
+                        if (route != Screens.Home.route) navigateToHome()
+                        closeDrawer()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.Home,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 4.dp),
+                )
 
-                    Image(
-                        painter = painterResource(id = R.drawable.drawer_banner),
-                        contentDescription = null,
-                        modifier = Modifier.clip(CardDefaults.shape)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    NavigationDrawerItem(
-                        label = { Text(text = "خانه") },
-                        selected = route == Screens.Home.route,
-                        onClick = {
-                            if (route != Screens.Home.route) navigateToHome()
-                            closeDrawer()
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Rounded.Home,
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier.padding(bottom = 4.dp),
-                    )
+                NavigationDrawerItem(
+                    label = { Text(text = "نوت‌ها") },
+                    selected = false,
+                    onClick = {
+                        if (route != Screens.Notes.route) navigateToNotes()
+                        closeDrawer()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.Create,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
 
-                    NavigationDrawerItem(
-                        label = { Text(text = "لینک‌ها") },
-                        selected = route == Screens.Stats.route,
-                        onClick = {
-                            if (route != Screens.Stats.route) navigateToStats()
-                            closeDrawer()
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Rounded.List,
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier.padding(bottom = 4.dp),
-                    )
+                NavigationDrawerItem(
+                    label = { Text(text = "لینک‌ها") },
+                    selected = route == Screens.Stats.route,
+                    onClick = {
+                        if (route != Screens.Stats.route) navigateToStats()
+                        closeDrawer()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.List,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 4.dp),
+                )
 
-                    NavigationDrawerItem(
-                        label = { Text(text = "اطلاعات مالی") },
-                        selected = route == Screens.Withdrawals.route,
-                        onClick = {
-                            navigateToWithdraw()
-                            closeDrawer()
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Rounded.ShoppingCart,
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier.padding(bottom = 4.dp),
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(text = "درباره ما") },
-                        selected = false,
-                        onClick = {
-                            closeDrawer()
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Rounded.Person,
-                                contentDescription = null
-                            )
-                        },
-                        modifier = Modifier.padding(bottom = 8.dp),
-                    )
+                NavigationDrawerItem(
+                    label = { Text(text = "اطلاعات مالی") },
+                    selected = route == Screens.Withdrawals.route,
+                    onClick = {
+                        navigateToWithdraw()
+                        closeDrawer()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.ShoppingCart,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 4.dp),
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "درباره ما") },
+                    selected = false,
+                    onClick = {
+                        navigateToAbout()
+                        closeDrawer()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.Person,
+                            contentDescription = null
+                        )
+                    },
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
 
-                    HorizontalDivider(
-                        modifier = Modifier.padding(bottom = 4.dp),
-                    )
+                HorizontalDivider(
+                    modifier = Modifier.padding(bottom = 4.dp),
+                )
 
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
-                                text = "خروج از حساب کاربری",
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        },
-                        selected = false,
-                        onClick = {
-                            closeDrawer()
-                            logout()
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Default.ExitToApp,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error
-                            )
-                        },
-                    )
-                }
-                Text(
-                    text = "آرش عزیزی و دلارام میرانی",
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .alpha(.7f)
-                        .fillMaxWidth()
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "خروج از حساب کاربری",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    },
+                    selected = false,
+                    onClick = {
+                        closeDrawer()
+                        logout()
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    },
                 )
             }
         }

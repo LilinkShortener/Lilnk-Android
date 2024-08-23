@@ -34,7 +34,8 @@ fun LoadingDialog(
                     horizontalAlignment = Alignment.Start,
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
                     ) {
                         CircularProgressIndicator(
                             color = MaterialTheme.colorScheme.secondary,
@@ -54,11 +55,13 @@ fun LoadingDialog(
                             Text(
                                 text = "در حال دریافت اطلاعات از سرور",
                                 fontSize = 13.sp,
-                                modifier = Modifier.padding(
-                                    bottom = 16.dp,
-                                    start = 16.dp,
-                                    end = 16.dp
-                                ).alpha(.7f)
+                                modifier = Modifier
+                                    .padding(
+                                        bottom = 16.dp,
+                                        start = 16.dp,
+                                        end = 16.dp
+                                    )
+                                    .alpha(.7f)
                             )
                         }
                     }
@@ -72,7 +75,7 @@ fun LoadingDialog(
                                 .padding(bottom = 8.dp)
                         ) {
                             TextButton(
-                                onClick = {onDismiss()},
+                                onClick = { onDismiss() },
                             ) {
                                 Text(text = "انصراف")
                             }

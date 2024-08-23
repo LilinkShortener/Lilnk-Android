@@ -8,6 +8,7 @@ import arash.lilnk.utilities.Statics
 import arash.lilnk.utilities.Statics.API_KEY
 import arash.lilnk.utilities.Statics.BASE_URL
 import arash.lilnk.utilities.Statics.USER_ID
+import arash.lilnk.utilities.convertToPersian
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
@@ -16,7 +17,7 @@ import org.json.JSONObject
 const val userStatsUrl = "$BASE_URL/stats.php"
 
 // Function to fetch user link statistics
-fun getUserLinkStats(
+fun getUserLinks(
     onResult: (Boolean, Int?, List<Links>?, Int?) -> Unit
 ) {
     // Create the JSON request object
@@ -42,7 +43,7 @@ fun getUserLinkStats(
                     val linkData = Links(
                         shortUrl = linkObject.getString("short_url"),
                         originalUrl = linkObject.getString("original_url"),
-                        createdAt = linkObject.getString("created_at"),
+                        createdAt = linkObject.getString("created_at").convertToPersian(),
                         accessCount = linkObject.getInt("access_count"),
                         earnings = linkObject.getInt("earnings")
                     )
