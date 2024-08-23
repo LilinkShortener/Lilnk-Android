@@ -67,6 +67,7 @@ fun NotesHistoryBottomSheet(
 
     // Launch the data fetching operation
     LaunchedEffect(Unit) {
+        isLoading = true
         getUserNotes { success, notes, errorCode ->
             isLoading = false
             if (success && !notes.isNullOrEmpty()) {
@@ -84,6 +85,7 @@ fun NotesHistoryBottomSheet(
                     snackbarHostState = snackbarHostState,
                     message = message
                 )
+                onDismiss()
             }
         }
     }

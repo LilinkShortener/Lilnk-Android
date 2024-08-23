@@ -60,7 +60,7 @@ fun ResultBottomSheet(
 ) {
     val context = LocalContext.current
     val btmState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val shortUrl by rememberUpdatedState(newValue = if (resultType == ResultType.Link) "$DOMAIN//$shortenLink" else "$DOMAIN//notes/$shortenLink")
+    val shortUrl by rememberUpdatedState(newValue = if (resultType == ResultType.Link) "$DOMAIN/$shortenLink" else "$DOMAIN/notes/$shortenLink")
 
     if (showResult) {
         ModalBottomSheet(

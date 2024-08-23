@@ -77,5 +77,6 @@ dependencies {
     //QRCode
     implementation(libs.qrose)
 
-    implementation("com.github.samanzamani:PersianDate:1.7.1")
+    //Persian date for android
+    implementation(libs.persiandate)
 }
