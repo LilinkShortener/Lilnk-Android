@@ -26,12 +26,11 @@ class Lilnk : Application(){
         requestQueue ?: Volley.newRequestQueue(applicationContext).also { requestQueue = it }
     }
 
-    fun <T> addToRequestQueue(req: Request<T>, tag: String = xTAG) {
+    fun <T> addToRequestQueue(req: Request<T>, tag: String = Statics.REQUEST_TAG) {
         req.tag = tag
         req.setShouldCache(false)
         req.setRetryPolicy(DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
         invoke().add(req)
     }
 
-    fun cancelPendingRequest(tag: String) = requestQueue?.cancelAll(tag)
-}
+    fun cancelPendingRequest(tag: String) = invoke().cancelAll(tag)}

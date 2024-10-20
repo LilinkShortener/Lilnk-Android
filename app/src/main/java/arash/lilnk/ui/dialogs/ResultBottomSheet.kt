@@ -112,8 +112,8 @@ fun ResultBottomSheet(
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "برای ذخیره بارکد اینجا کلیک کنید.",
-                                    fontSize = 13.sp,
+                                    text = "برای اشتراک‌گذاری لینک می‌توانید از بارکد استفاده کنید.",
+                                    fontSize = 12.sp,
                                     modifier = Modifier.alpha(.7f)
                                 )
                             }
